@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мастер-класс по шифрованию</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 25px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        h1 {
+            color: #2575fc;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #6a11cb;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        .intro {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 5px solid #6a11cb;
+        }
+        
+        .task {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eaeaea;
+            transition: transform 0.3s ease;
+        }
+        
+        .task:hover {
+            transform: translateY(-5px);
+        }
+        
+        .task-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .task-number {
+            background-color: #6a11cb;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .task-title {
+            color: #2575fc;
+            font-size: 1.4rem;
+        }
+        
+        .task-description {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        .code-block {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-top: 15px;
+        }
+        
+        label {
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #444;
+        }
+        
+        input {
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: #2575fc;
+            outline: none;
+        }
+        
+        button {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 4px 10px rgba(37, 117, 252, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(37, 117, 252, 0.4);
+        }
+        
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .completion {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+        
+        .completion h2 {
+            color: #6a11cb;
+            margin-bottom: 15px;
+        }
+        
+        .completion p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .confetti {
+            font-size: 2rem;
+            margin: 10px 0;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .task {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Мастер-класс по шифрованию</h1>
+            <p class="subtitle">Решите задачи по шифрованию и получите поздравление!</p>
+        </header>
+        
+        <section class="intro">
+            <h2>Добро пожаловать!</h2>
+            <p>В этом мастер-классе вы познакомитесь с тремя простыми методами шифрования. Решите все задачи, чтобы получить заслуженную награду!</p>
+        </section>
+        
+        <section class="task" id="task1">
+            <div class="task-header">
+                <div class="task-number">1</div>
+                <h3 class="task-title">Шифр Цезаря</h3>
+            </div>
+            <p class="task-description">
+                Шифр Цезаря — это вид шифра подстановки, в котором каждый символ в открытом тексте заменяется символом, находящимся на некотором постоянном числе позиций левее или правее него в алфавите.
+            </p>
+            <div class="code-block">def caesar_cipher(text, shift):
+    result = ""
+    for char in text:
+        if char.isalpha():
+            shift_base = 65 if char.isupper() else 97
+            result += chr((ord(char) - shift_base + shift) % 26 + shift_base)
+        else:
+            result += char
+    return result
+
+# Пример использования
+encrypted = caesar_cipher("PYTHON", 3)
+print(encrypted)  # Что будет выведено?</div>
+            <div class="input-group">
+                <label for="answer1">Введите результат выполнения кода:</label>
+                <input type="text" id="answer1" placeholder="Ваш ответ">
+                <button onclick="checkAnswer(1)">Проверить</button>
+            </div>
+            <div class="result" id="result1"></div>
+        </section>
+        
+        <section class="task" id="task2">
+            <div class="task-header">
+                <div class="task-number">2</div>
+                <h3 class="task-title">Base64</h3>
+            </div>
+            <p class="task-description">
+                Base64 — это стандарт кодирования двоичных данных при помощи только 64 символов ASCII. Алфавит кодирования содержит текстово-цифровые символы A-Z, a-z и 0-9.
+            </p>
+            <div class="code-block">import base64
+
+message = "Hello, World!"
+message_bytes = message.encode('ascii')
+base64_bytes = base64.b64encode(message_bytes)
+base64_message = base64_bytes.decode('ascii')
+
+print(base64_message)  # Что будет выведено?</div>
+            <div class="input-group">
+                <label for="answer2">Введите результат выполнения кода:</label>
+                <input type="text" id="answer2" placeholder="Ваш ответ">
+                <button onclick="checkAnswer(2)">Проверить</button>
+            </div>
+            <div class="result" id="result2"></div>
+        </section>
+        
+        <section class="task" id="task3">
+            <div class="task-header">
+                <div class="task-number">3</div>
+                <h3 class="task-title">Шифр Атбаш</h3>
+            </div>
+            <p class="task-description">
+                Шифр Атбаш — это простой шифр подстановки, который был создан для иврита. Он работает по принципу замены первой буквы алфавита на последнюю, второй на предпоследнюю и т.д.
+            </p>
+            <div class="code-block">def atbash_cipher(text):
+    result = ""
+    for char in text:
+        if char.isalpha():
+            if char.isupper():
+                result += chr(90 - (ord(char) - 65))
+            else:
+                result += chr(122 - (ord(char) - 97))
+        else:
+            result += char
+    return result
+
+# Пример использования
+encrypted = atbash_cipher("CRYPTO")
+print(encrypted)  # Что будет выведено?</div>
+            <div class="input-group">
+                <label for="answer3">Введите результат выполнения кода:</label>
+                <input type="text" id="answer3" placeholder="Ваш ответ">
+                <button onclick="checkAnswer(3)">Проверить</button>
+            </div>
+            <div class="result" id="result3"></div>
+        </section>
+        
+        <section class="completion" id="completion">
+            <div class="confetti">🎉🎊🥳</div>
+            <h2>Поздравляем!</h2>
+            <p>Вы успешно завершили мастер-класс по шифрованию!</p>
+            <p>Теперь вы знакомы с тремя простыми методами шифрования: шифр Цезаря, Base64 и шифр Атбаш.</p>
+            <p>Продолжайте изучать криптографию — это увлекательная и важная область знаний!</p>
+            <div class="confetti">🎉🎊🥳</div>
+        </section>
+    </div>
+
+    <script>
+        const answers = {
+            1: "SBWKRQ", // Caesar cipher: PYTHON shifted by 3 becomes SBWKRQ
+            2: "SGVsbG8sIFdvcmxkIQ==", // Base64 encoding of "Hello, World!"
+            3: "XIBKGL" // Atbash cipher: CRYPTO becomes XIBKGL
+        };
+        
+        let completedTasks = 0;
+        
+        function checkAnswer(taskNumber) {
+            const userAnswer = document.getElementById(`answer${taskNumber}`).value.trim().toUpperCase();
+            const resultElement = document.getElementById(`result${taskNumber}`);
+            
+            if (userAnswer === answers[taskNumber]) {
+                resultElement.textContent = "Правильно! Отличная работа!";
+                resultElement.className = "result success";
+                resultElement.style.display = "block";
+                
+                // Помечаем задачу как выполненную
+                document.getElementById(`task${taskNumber}`).style.borderLeft = "5px solid #28a745";
+                
+                completedTasks++;
+                
+                // Проверяем, все ли задачи выполнены
+                if (completedTasks === 3) {
+                    setTimeout(() => {
+                        document.getElementById('completion').style.display = 'block';
+                        window.scrollTo(0, document.body.scrollHeight);
+                    }, 1000);
+                }
+            } else {
+                resultElement.textContent = "Неверно. Попробуйте еще раз!";
+                resultElement.className = "result error";
+                resultElement.style.display = "block";
+            }
+        }
+        
+        // Добавляем обработчики событий для клавиши Enter
+        document.getElementById('answer1').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkAnswer(1);
+        });
+        
+        document.getElementById('answer2').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkAnswer(2);
+        });
+        
+        document.getElementById('answer3').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkAnswer(3);
+        });
+    </script>
+</body>
+</html>
